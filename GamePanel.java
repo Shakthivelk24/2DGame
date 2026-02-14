@@ -17,6 +17,9 @@ public class GamePanel extends JPanel implements Runnable {
     public final int screenWidth = tileSize * maxScreenCol; // 768 pixels
     public final int screenHeight = tileSize * maxScreenRow; // 576 pixels
 
+    // FPS
+    int FPS = 60;
+
     KeyHandler keyH = new KeyHandler();
     Thread gameThread;
 
@@ -32,44 +35,75 @@ public class GamePanel extends JPanel implements Runnable {
         this.addKeyListener(keyH);
         this.setFocusable(true);
     }
+
     public void startGameThread() {
         gameThread = new Thread(this);
         gameThread.start();
     }
-    
+
     @Override
+    // Sleep method is not accurate, so we will use delta method to calculate the time
+    // public void run() {
+    // double drawInterval = 1000000000/FPS; // 0.01666 seconds
+    // double nextDrawTime = System.nanoTime() + drawInterval;
+
+    // while(gameThread != null) {
+    // // Update: update information such as character positions
+    // update();
+    // // Drew: draw the screen with the updated information
+    // repaint();
+
+    // try {
+    // double remainingTime = nextDrawTime - System.nanoTime();
+    // remainingTime = remainingTime/1000000; // Convert to milliseconds
+    // if(remainingTime < 0) {
+    // remainingTime = 0;
+    // }
+    // Thread.sleep((long) remainingTime);
+
+    // nextDrawTime += drawInterval;
+    // } catch (Exception e) {
+    // e.printStackTrace();
+    // }
+    // }
+    // }
+    // Delta method is more accurate than sleep method, so we will use delta method to calculate the time
     public void run() {
-         while(gameThread != null) {
-              
-            long currentTime = System.nanoTime();
-            long currentTime2 = System.currentTimeMillis();
-
-            // System.out.println("The game is running");
-
-            // Update: update information such as character positions
-            update();
-            // Drew: draw the screen with the updated information
-            repaint();
-         }
+        double drawInterval = 1000000000 / FPS; // 0.01666 seconds
+        double delta = 0;
+        long lastTime = System.nanoTime();
+        long currentTime;
+        while (gameThread != null) {
+            currentTime = System.nanoTime();
+            delta += (currentTime - lastTime) / drawInterval;
+            lastTime = currentTime;
+            if (delta >= 1) {
+                // Update: update information such as character positions
+                update();
+                // Drew: draw the screen with the updated information
+                repaint();
+                delta--;
+            }
+        }
     }
-    public void update(){
-        if(keyH.upPressed){
+
+    public void update() {
+        if (keyH.upPressed) {
             playerY -= playerSpeed;
-        }
-        else if(keyH.downPressed){
+        } else if (keyH.downPressed) {
             playerY += playerSpeed;
-        }
-        else if(keyH.leftPressed){
+        } else if (keyH.leftPressed) {
             playerX -= playerSpeed;
         }
-        if(keyH.rightPressed){
+        if (keyH.rightPressed) {
             playerX += playerSpeed;
         }
     }
-    public void paintComponent(Graphics g){
+
+    public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        
-        Graphics2D g2 = (Graphics2D)g;
+
+        Graphics2D g2 = (Graphics2D) g;
 
         g2.setColor(Color.white);
 
