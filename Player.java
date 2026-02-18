@@ -1,4 +1,5 @@
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
@@ -16,6 +17,15 @@ public class Player extends Entity {
 
         screenX = gp.screenWidth / 2 - (gp.tileSize / 2);
         screenY = gp.screenHeight / 2 - (gp.tileSize / 2);
+
+        solidArea = new Rectangle();
+        solidArea.x = 8;
+        solidArea.y = 16;
+        solidArea.width = 32;
+        solidArea.height = 32;
+
+
+
         setDefaultValues();
         getPlayerImage();
     }
@@ -46,20 +56,40 @@ public class Player extends Entity {
 
     public void update() {
         if (keyH.upPressed || keyH.downPressed || keyH.leftPressed || keyH.rightPressed) {
-            if (keyH.upPressed) {
-                worldy -= speed;
+            if (keyH.upPressed) {  
                 direction = "up";
-            } else if (keyH.downPressed) {
-                worldy += speed;
+            } else if (keyH.downPressed) {  
                 direction = "down";
-            } else if (keyH.leftPressed) {
-                worldx -= speed;
+            } else if (keyH.leftPressed) {     
                 direction = "left";
             }
             if (keyH.rightPressed) {
-                worldx += speed;
                 direction = "right";
             }
+            // Check tile collision
+            collisionOn = false;
+            gp.cChecker.checlTilte(this);
+
+            // If collision is false, player can move
+            if(collisionOn == false) {
+                switch (direction) {
+                    case "up":
+                        worldy -= speed;
+                        break;
+                    case "down":
+                        worldy += speed;
+                        break;
+                    case "left":
+                        worldx -= speed;
+                        break;
+                    case "right":
+                        worldx += speed;
+                        break;
+                    default:
+                        break;
+                }
+            }
+
             spriteCounter++;
             if (spriteCounter > 10) {
                 if (spriteNum == 1) {
