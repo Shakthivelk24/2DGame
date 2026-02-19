@@ -1,0 +1,18 @@
+import java.io.IOException;
+import javax.imageio.ImageIO;
+
+public class OBJ_Door extends SuperObject {
+
+    public OBJ_Door() {
+        name = "Door";
+        collision = true;
+
+        try {
+            image = ImageIO.read(
+                getClass().getResourceAsStream("/Object/door.png")
+            );
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
