@@ -1,11 +1,15 @@
+// import java.awt.Rectangle;
+
 public class CollisionChecker {
+
     public GamePanel gp;
 
-    public CollisionChecker(GamePanel gp){
+    public CollisionChecker(GamePanel gp) {
         this.gp = gp;
     }
 
-    public void checlTilte(Entity entity){
+    // ---------------- TILE COLLISION ----------------
+    public void checlTilte(Entity entity) {
 
         int entityLeftWorldX = entity.worldx + entity.solidArea.x;
         int entityRightWorldX = entity.worldx + entity.solidArea.x + entity.solidArea.width;
@@ -20,6 +24,7 @@ public class CollisionChecker {
         int tileNum1, tileNum2;
 
         switch (entity.direction) {
+
             case "up":
                 entityTopRow = (entityTopWorldY - entity.speed) / gp.tileSize;
                 tileNum1 = gp.tileM.mapTileNum[entityLeftCol][entityTopRow];
@@ -28,6 +33,7 @@ public class CollisionChecker {
                     entity.collisionOn = true;
                 }
                 break;
+
             case "down":
                 entityBottomRow = (entityBottomWorldY + entity.speed) / gp.tileSize;
                 tileNum1 = gp.tileM.mapTileNum[entityLeftCol][entityBottomRow];
@@ -36,6 +42,7 @@ public class CollisionChecker {
                     entity.collisionOn = true;
                 }
                 break;
+
             case "left":
                 entityLeftCol = (entityLeftWorldX - entity.speed) / gp.tileSize;
                 tileNum1 = gp.tileM.mapTileNum[entityLeftCol][entityTopRow];
@@ -44,6 +51,7 @@ public class CollisionChecker {
                     entity.collisionOn = true;
                 }
                 break;
+
             case "right":
                 entityRightCol = (entityRightWorldX + entity.speed) / gp.tileSize;
                 tileNum1 = gp.tileM.mapTileNum[entityRightCol][entityTopRow];
@@ -52,24 +60,26 @@ public class CollisionChecker {
                     entity.collisionOn = true;
                 }
                 break;
-        
-            default:
-                break;
         }
     }
-    public int checkObject(Entity entity,boolean player){
+
+    // ---------------- OBJECT COLLISION ----------------
+    public int checkObject(Entity entity, boolean player) {
 
         int index = 999;
-        for(int i=0;i<gp.obj.length;i++){
-            if(gp.obj[i] != null){
+        int i = 0; // 🔴 index tracker for ArrayList
 
-                // Get entity solid area position
+        for (SuperObject object : gp.objList) { // 🔴 COLLECTION USED
+
+            if (object != null) {
+
+                // Entity solid area
                 entity.solidArea.x = entity.worldx + entity.solidArea.x;
                 entity.solidArea.y = entity.worldy + entity.solidArea.y;
 
-                // Get the object solid area position
-                gp.obj[i].solidArea.x = gp.obj[i].worldX + gp.obj[i].solidArea.x;
-                gp.obj[i].solidArea.y = gp.obj[i].worldY + gp.obj[i].solidArea.y;
+                // Object solid area
+                object.solidArea.x = object.worldX + object.solidArea.x;
+                object.solidArea.y = object.worldY + object.solidArea.y;
 
                 switch (entity.direction) {
                     case "up":
@@ -84,26 +94,27 @@ public class CollisionChecker {
                     case "right":
                         entity.solidArea.x += entity.speed;
                         break;
-                    default:
-                        break;
                 }
 
-                if (entity.solidArea.intersects(gp.obj[i].solidArea)) {
-                    if (gp.obj[i].collision) {
+                if (entity.solidArea.intersects(object.solidArea)) {
+
+                    if (object.collision) {
                         entity.collisionOn = true;
                     }
+
                     if (player) {
                         index = i;
                     }
                 }
 
-                // Reset solid area position
+                // Reset positions
                 entity.solidArea.x = entity.solidAreaDefaultX;
                 entity.solidArea.y = entity.solidAreaDefaultY;
-                gp.obj[i].solidArea.x = gp.obj[i].solidAreaDefaultX;
-                gp.obj[i].solidArea.y = gp.obj[i].solidAreaDefaultY;
-
+                object.solidArea.x = object.solidAreaDefaultX;
+                object.solidArea.y = object.solidAreaDefaultY;
             }
+
+            i++;
         }
         return index;
     }
