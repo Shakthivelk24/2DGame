@@ -8,12 +8,14 @@ public class Player extends Entity {
 
     GamePanel gp;
     KeyHandler keyH;
+
     public final int screenX;
     public final int screenY;
+
     public int hasKey = 0;
 
-
     public Player(GamePanel gp, KeyHandler keyH) {
+
         this.gp = gp;
         this.keyH = keyH;
 
@@ -28,8 +30,6 @@ public class Player extends Entity {
         solidArea.width = 32;
         solidArea.height = 32;
 
-
-
         setDefaultValues();
         getPlayerImage();
     }
@@ -42,7 +42,6 @@ public class Player extends Entity {
     }
 
     public void getPlayerImage() {
-
         try {
             up1 = ImageIO.read(getClass().getResourceAsStream("/wakingSprite/boy_up_1.png"));
             up2 = ImageIO.read(getClass().getResourceAsStream("/wakingSprite/boy_up_2.png"));
@@ -52,134 +51,97 @@ public class Player extends Entity {
             left2 = ImageIO.read(getClass().getResourceAsStream("/wakingSprite/boy_left_2.png"));
             right1 = ImageIO.read(getClass().getResourceAsStream("/wakingSprite/boy_right_1.png"));
             right2 = ImageIO.read(getClass().getResourceAsStream("/wakingSprite/boy_right_2.png"));
-
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     public void update() {
+
         if (keyH.upPressed || keyH.downPressed || keyH.leftPressed || keyH.rightPressed) {
-            if (keyH.upPressed) {  
-                direction = "up";
-            } else if (keyH.downPressed) {  
-                direction = "down";
-            } else if (keyH.leftPressed) {     
-                direction = "left";
-            }
-            if (keyH.rightPressed) {
-                direction = "right";
-            }
-            // Check tile collision
+
+            if (keyH.upPressed) direction = "up";
+            else if (keyH.downPressed) direction = "down";
+            else if (keyH.leftPressed) direction = "left";
+            if (keyH.rightPressed) direction = "right";
+
             collisionOn = false;
             gp.cChecker.checlTilte(this);
+
             int objIndex = gp.cChecker.checkObject(this, true);
             pickUpObject(objIndex);
 
-            // If collision is false, player can move
-            if(collisionOn == false) {
+            if (collisionOn == false) {
                 switch (direction) {
-                    case "up":
-                        worldy -= speed;
-                        break;
-                    case "down":
-                        worldy += speed;
-                        break;
-                    case "left":
-                        worldx -= speed;
-                        break;
-                    case "right":
-                        worldx += speed;
-                        break;
-                    default:
-                        break;
+                    case "up": worldy -= speed; break;
+                    case "down": worldy += speed; break;
+                    case "left": worldx -= speed; break;
+                    case "right": worldx += speed; break;
                 }
             }
 
             spriteCounter++;
             if (spriteCounter > 10) {
-                if (spriteNum == 1) {
-                    spriteNum = 2;
-                } else if (spriteNum == 2) {
-                    spriteNum = 1;
-                }
+                spriteNum = (spriteNum == 1) ? 2 : 1;
                 spriteCounter = 0;
             }
         }
     }
-    public void pickUpObject(int index){
-        if(index != 999){
-            String objectName = gp.obj[index].name;
 
-            switch (objectName) {
-                case "Key":
-                        
-                    hasKey++;
-                    gp.obj[index] = null;
-                    gp.ui.showMessage("You got a key!");
-                    gp.playSE(1);
-                    break;
-                case "Door":
-                    if(hasKey > 0){
-                        gp.ui.showMessage("You opened the door!");
-                        gp.playSE(3);
-                        gp.obj[index] = null;
-                        hasKey--;
-                    } else {
-                        gp.ui.showMessage("You need a key to open the door!");
-                    }
-                    break;
-                case "Boots":
-                    gp.playSE(2);
-                    speed += 2;
-                    gp.obj[index] = null;
-                    gp.ui.showMessage("You got the boots! Speed increased!");
-                    break;
-                case "Cheat":
-                    gp.ui.gameFinished = true;
-                    gp.stopSound();
-                    gp.playSE(4);
-                    break;
-            }
-            
+    // ---------------- OBJECT INTERACTION ----------------
+    public void pickUpObject(int index) {
+
+        if (index == 999) return;
+
+        SuperObject object = gp.objList.get(index);
+        ObjectType type = object.type; 
+
+        switch (type) {
+
+            case KEY:
+                hasKey++;
+                gp.objList.remove(index);      
+                gp.ui.showMessage("You got a key!");
+                gp.playSE(1);
+                break;
+
+            case DOOR:
+                if (hasKey > 0) {
+                    hasKey--;
+                    gp.objList.remove(index);
+                    gp.ui.showMessage("You opened the door!");
+                    gp.playSE(3);
+                } else {
+                    gp.ui.showMessage("You need a key to open the door!");
+                }
+                break;
+
+            case BOOTS:
+                speed += 2;
+                gp.objList.remove(index);
+                gp.ui.showMessage("You got the boots! Speed increased!");
+                gp.playSE(2);
+                break;
+
+            case CHEAT:
+                gp.ui.gameFinished = true;
+                gp.stopSound();
+                gp.playSE(4);
+                break;
         }
     }
 
     public void draw(Graphics2D g2) {
+
         BufferedImage image = null;
+
         switch (direction) {
-            case "up":
-                if (spriteNum == 1) {
-                    image = up1;
-                } else if (spriteNum == 2) {
-                    image = up2;
-                }
-                break;
-            case "down":
-                if (spriteNum == 1) {
-                    image = down1;
-                } else if (spriteNum == 2) {
-                    image = down2;
-                }
-                break;
-            case "left":
-                if (spriteNum == 1) {
-                    image = left1;
-                } else if (spriteNum == 2) {
-                    image = left2;
-                }
-                break;
-            case "right":
-                if (spriteNum == 1) {
-                    image = right1;
-                } else if (spriteNum == 2) {
-                    image = right2;
-                }
-                break;
-            default:
-                break;
+            case "up": image = (spriteNum == 1) ? up1 : up2; break;
+            case "down": image = (spriteNum == 1) ? down1 : down2; break;
+            case "left": image = (spriteNum == 1) ? left1 : left2; break;
+            case "right": image = (spriteNum == 1) ? right1 : right2; break;
         }
+
         g2.drawImage(image, screenX, screenY, gp.tileSize, gp.tileSize, null);
     }
-
 }
