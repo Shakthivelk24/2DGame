@@ -1,44 +1,63 @@
 public class AssetSetter {
-     GamePanel gp;
-     
-     public AssetSetter(GamePanel gp){
+
+    GamePanel gp;
+
+    public AssetSetter(GamePanel gp) {
         this.gp = gp;
-     }
+    }
 
-     public void setObject() {
-        gp.obj[0] = new OBJ_Key();
-        gp.obj[0].worldX = gp.tileSize*23;
-        gp.obj[0].worldY = gp.tileSize*7;
+    public void setObject() {
 
-        gp.obj[1] = new OBJ_Key();
-        gp.obj[1].worldX = gp.tileSize*23;
-        gp.obj[1].worldY = gp.tileSize*40;
+        // ---------- KEYS ----------
+        OBJ_Key key1 = new OBJ_Key();
+        key1.worldX = gp.tileSize * 23;
+        key1.worldY = gp.tileSize * 7;
+        key1.type = ObjectType.KEY;          // 🔴 ENUM USED
+        gp.objList.add(key1);                // 🔴 COLLECTION USED
 
-        gp.obj[2] = new OBJ_Key();
-        gp.obj[2].worldX = gp.tileSize*38;
-        gp.obj[2].worldY = gp.tileSize*8;
+        OBJ_Key key2 = new OBJ_Key();
+        key2.worldX = gp.tileSize * 23;
+        key2.worldY = gp.tileSize * 40;
+        key2.type = ObjectType.KEY;
+        gp.objList.add(key2);
 
-        gp.obj[3] = new OBJ_Door();
-        gp.obj[3].worldX = gp.tileSize*10;
-        gp.obj[3].worldY = gp.tileSize*11;
+        OBJ_Key key3 = new OBJ_Key();
+        key3.worldX = gp.tileSize * 38;
+        key3.worldY = gp.tileSize * 8;
+        key3.type = ObjectType.KEY;
+        gp.objList.add(key3);
 
-        gp.obj[4] = new OBJ_Door();
-        gp.obj[4].worldX = gp.tileSize*8;
-        gp.obj[4].worldY = gp.tileSize*28;
+        // ---------- DOORS ----------
+        OBJ_Door door1 = new OBJ_Door();
+        door1.worldX = gp.tileSize * 10;
+        door1.worldY = gp.tileSize * 11;
+        door1.type = ObjectType.DOOR;
+        gp.objList.add(door1);
 
-        gp.obj[5] = new OBJ_Door();
-        gp.obj[5].worldX = gp.tileSize*12;
-        gp.obj[5].worldY = gp.tileSize*22;
+        OBJ_Door door2 = new OBJ_Door();
+        door2.worldX = gp.tileSize * 8;
+        door2.worldY = gp.tileSize * 28;
+        door2.type = ObjectType.DOOR;
+        gp.objList.add(door2);
 
-        gp.obj[6] = new OBJ_Cheat();
-        gp.obj[6].worldX = gp.tileSize*10;
-        gp.obj[6].worldY = gp.tileSize*7;
+        OBJ_Door door3 = new OBJ_Door();
+        door3.worldX = gp.tileSize * 12;
+        door3.worldY = gp.tileSize * 22;
+        door3.type = ObjectType.DOOR;
+        gp.objList.add(door3);
 
-         gp.obj[7] = new OBJ_Boots();
-         gp.obj[7].worldX = gp.tileSize*37;
-         gp.obj[7].worldY = gp.tileSize*42;
+        // ---------- CHEAT ----------
+        OBJ_Cheat cheat = new OBJ_Cheat();
+        cheat.worldX = gp.tileSize * 10;
+        cheat.worldY = gp.tileSize * 7;
+        cheat.type = ObjectType.CHEAT;
+        gp.objList.add(cheat);
 
-
-
-     }
+        // ---------- BOOTS ----------
+        OBJ_Boots boots = new OBJ_Boots();
+        boots.worldX = gp.tileSize * 37;
+        boots.worldY = gp.tileSize * 42;
+        boots.type = ObjectType.BOOTS;
+        gp.objList.add(boots);
+    }
 }
