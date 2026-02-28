@@ -43,19 +43,19 @@ The game is built with classic 2D tile-based mechanics and focuses on exploratio
 - Treasure room victory screen
 
 ### Start Area
-![Start Area](output/output.png)
+![Start Area](output/Output.png)
 
 ### Key Collection
-![Key Collection](output/output-1.png)
+![Key Collection](output/Output-1.png)
 
 ### Speed Boots
-![Speed Boots](output/output-3.png)
+![Speed Boots](output/Output-3.png)
 
 ### Door Unlocked
-![Door Unlocked](output/output-4.png)
+![Door Unlocked](output/Output-4.png)
 
 ### Treasure Found
-![Treasure Found](output/output-2.png)
+![Treasure Found](output/Output-2.png)
 
 ## 🛠️ Tech Stack
 - Language: Java
